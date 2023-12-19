@@ -5,10 +5,14 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {RouterProvider} from "react-router";
 import {router} from "./routes";
+import {QueryClient, QueryClientProvider} from "react-query";
 
+const queryClient = new QueryClient()
 ReactDOM.createRoot(document.getElementById("root") as any).render(
     <React.StrictMode>
-        <RouterProvider router={router}/>
+        <QueryClientProvider client={queryClient}>
+            <RouterProvider router={router}/>
+        </QueryClientProvider>
     </React.StrictMode>
 );
 

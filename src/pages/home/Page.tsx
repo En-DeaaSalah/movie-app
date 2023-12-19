@@ -6,28 +6,11 @@ import {MovieModel} from "../../models";
 import {MovieCard} from "../../components/movieCard";
 import {NoDataPlaceholder} from "../../components/noData";
 import {useNavigate} from "react-router";
+import {IPaginationConfig} from "../../api/interfaces/pagination.interface";
+import {IResponse} from "../../api/interfaces/baseResponse.interface";
+import {useQuery} from "react-query";
+import {getAllMoviesApi} from "../../api/services/moivesIndexApi/getAllMoviesApi";
 
-
-const url = 'https://api.themoviedb.org/3/search/movie';
-
-const options = {
-    method: 'GET',
-    headers: {
-        accept: 'application/json',
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4MDRhZmNlOGQxMzk4MjdiNzhmMjdlMDQ3ZjJkYjVkNyIsInN1YiI6IjY1ODE3NjQ3MDI1NzY0MDdkZTQ5M2FhYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.pvtLOksL7BGQ2R4VoiM4b2AXmPfGE56si1cK1bCdYdk'
-    }
-}
-
-interface IPaginationConfig {
-    total_results?: number
-    total_pages?: number
-    page: number
-}
-
-
-interface IResponse<T> extends IPaginationConfig {
-    results: T[]
-}
 
 export default function Home() {
 
@@ -36,21 +19,20 @@ export default function Home() {
     const [paginationData, setPaginationData] = useState<IPaginationConfig>({
         page: 1
     })
+    const {data} = useQuery<unknown, unknown, MovieModel[]>({
+        onSuccess: (data) => {
+            setMovies(data)
+        },
+        queryFn: () => getAllMoviesApi({
+            ...paginationData,
+            ...(searchKeyWord ? {query: searchKeyWord} : {})
+        }),
+        queryKey: [{
+            ...paginationData,
+            ...(searchKeyWord ? {query: searchKeyWord} : {})
+        }],
+    })
     const navigator = useNavigate()
-    useEffect(() => {
-        const resp = axios.get<IResponse<MovieModel>>(url, {
-            ...options,
-            params: {
-                ...paginationData,
-                ...(searchKeyWord ? {query: searchKeyWord} : {})
-            }
-        })
-        resp.then((value) => {
-            const {results, ...paginationData} = value.data
-            setMovies(results)
-            setPaginationData(paginationData)
-        })
-    }, [searchKeyWord, paginationData])
     return (
         <>
             <Row>
