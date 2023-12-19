@@ -1,11 +1,11 @@
 import IProps from './props.interface'
 import style from './style.module.scss'
-import {Card} from "antd";
+import {Card, Space, Typography} from "antd";
 import Meta from "antd/es/card/Meta";
 
 export default function Component({movie, onCardClick}: IProps) {
-    console.log(movie)
-    const {title, id, overview} = movie
+    const {Paragraph, Text} = Typography;
+    const {title, id, overview, release_date} = movie
     return (
 
         <Card
@@ -22,7 +22,17 @@ export default function Component({movie, onCardClick}: IProps) {
             }
             hoverable
         >
-            <Meta title={title} description={overview}/>
+            <Meta title={
+                <div>
+                    <Space direction={"vertical"}>
+                        <Text>{title}</Text>
+                        <Text>{release_date}</Text>
+                    </Space>
+                </div>
+            } description={<Paragraph
+                ellipsis={{
+                    rows: 2
+                }}>{overview}</Paragraph>}/>
         </Card>
     )
 }
