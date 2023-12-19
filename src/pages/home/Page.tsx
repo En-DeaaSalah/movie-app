@@ -1,4 +1,4 @@
-import {Col, Row, Space} from "antd";
+import {Col, Pagination, Row, Space} from "antd";
 import {SearchField} from "../../components/searchBar";
 import {useEffect, useState} from "react";
 import axios from "axios";
@@ -50,7 +50,7 @@ export default function Home() {
             setMovies(results)
             setPaginationData(paginationData)
         })
-    }, [searchKeyWord])
+    }, [searchKeyWord, paginationData])
     return (
         <>
             <Row>
@@ -83,6 +83,20 @@ export default function Home() {
                                 )
                             }) : <NoDataPlaceholder/>}
                         </Row>
+                    </Col>
+                    <Col span={12}>
+                        <Pagination
+                            onChange={(page, pageSize) => {
+                                setPaginationData({
+                                    ...paginationData,
+                                    page: page
+                                })
+                            }}
+                            defaultCurrent={1}
+                            current={paginationData.page}
+                            total={paginationData.total_results}
+                            pageSize={12}
+                        />
                     </Col>
                 </Space>
             </Row>
