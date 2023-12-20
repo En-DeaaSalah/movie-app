@@ -1,6 +1,138 @@
-import {useParams} from "react-router";
+import {useNavigate, useParams} from "react-router";
+import {useQuery} from "react-query";
+import getMovieDetailsApi from "../../api/services/movieDetailsApi/getMovieDetailsApi";
+import {Col, Image, Row, Spin, Typography} from "antd";
+import style from './style.module.scss'
+import {IMAGE_BASE_URL} from "../../constants";
+import getSimilarMovieApi from "../../api/services/similarMovieApi/getSimilarMovieApi";
+import {MovieCard} from "../../components/movieCard";
+import {ArrowLeftOutlined} from "@ant-design/icons";
+
+
+function DetailsItem(
+    {
+        value,
+        label
+    }: {
+        label: string,
+        value?: any
+    }) {
+    return (
+        <div className={style.detailsItem}>
+            <div className={style.label}>{label}</div>
+            <div className={style.value}>{value}</div>
+        </div>
+    )
+}
 
 export default function MovieDetails() {
+    const {Text} = Typography;
     const {id} = useParams()
-    return (<>movie number {id}</>)
+    const navigator = useNavigate()
+    const {data, isLoading, isSuccess} = useQuery({
+        onError: (err) => {
+            console.log(err)
+        },
+        onSuccess: (data) => {
+            console.log(data)
+        },
+        queryFn: () => getMovieDetailsApi(Number(id)),
+        queryKey: [Number(id)],
+    })
+    const {data: similarMovies, isLoading: isSimilarMoviesLoading} = useQuery({
+        onError: (err) => {
+            console.log(err)
+        },
+        onSuccess: (data) => {
+            console.log(data)
+        },
+        queryFn: () => getSimilarMovieApi(Number(id)),
+        queryKey: ["similar", Number(id)],
+    })
+
+    return (
+        <div className={style.pageContainer}>
+            <Spin spinning={isLoading}>
+                <div style={{
+                    marginLeft: 20
+                }}>
+                    <ArrowLeftOutlined
+                        onClick={() => {
+                            navigator('/')
+                        }}/>
+                </div>
+                <div className={style.content}>
+                    <Row>
+                        <Col xxl={12}
+                             xl={12}
+                             lg={12}
+                             md={24}
+                             sm={24}
+                             xs={24}>
+                            <div className={style.imageContainer}>
+                                <Image preview={false}
+                                       className={style.img}
+                                       src={`${IMAGE_BASE_URL}/${data?.backdrop_path}`}/>
+                                <div
+                                    style={{
+                                        marginTop: 5
+                                    }}>
+                                    <span>original title : </span>
+                                    {data?.original_title}
+                                </div>
+                            </div>
+                        </Col>
+                        <Col xxl={12}
+                             xl={12}
+                             lg={12}
+                             md={24}
+                             sm={24}
+                             xs={24}>
+                            <div className={style.movieInfo}>
+                                <DetailsItem label={"Title"}
+                                             value={data?.title}/>
+                                <DetailsItem label={"OverView"}
+                                             value={data?.overview}/>
+                                <DetailsItem label={"Genres"}
+                                             value={data?.genres.map(({id, name}) => <span key={id}>{name}</span>)}/>
+                                <DetailsItem label={"Release Date"}
+                                             value={data?.release_date}/>
+                                <DetailsItem label={"Status"}
+                                             value={data?.status}/>
+                                <DetailsItem label={"Producer"}
+                                             value={data?.production_companies.map(({id, name}) => <span
+                                                 key={id}>{name}</span>)}/>
+                            </div>
+                        </Col>
+                    </Row>
+                    <Row gutter={[10, 10]}>
+                        <Spin spinning={isSimilarMoviesLoading}>
+                            <Col span={22} push={1}><h2>Similar Movies</h2></Col>
+                            <Col span={24}>
+                                <Row gutter={[10, 10]}>
+                                    {similarMovies?.results.slice(0, 8).map((movie) => {
+                                        return (
+                                            <Col
+                                                xxl={6}
+                                                xl={6}
+                                                lg={8}
+                                                md={12}
+                                                sm={12}
+                                                xs={24}
+                                                className={style.movieCardContainer}>
+                                                <MovieCard
+                                                    onCardClick={() => {
+                                                    }}
+                                                    movie={movie}/>
+                                            </Col>
+                                        )
+                                    })}
+                                </Row>
+                            </Col>
+                        </Spin>
+                    </Row>
+                </div>
+            </Spin>
+        </div>
+    )
 }

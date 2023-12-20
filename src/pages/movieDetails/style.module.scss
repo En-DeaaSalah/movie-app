@@ -1,0 +1,47 @@
+.pageContainer {
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+
+  .imageContainer {
+    text-align: center;
+
+    .img {
+      border-radius: 20px;
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+  }
+
+  .detailsItem {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .label {
+      font-size: 18px;
+    }
+
+    .value {
+      padding: 4px;
+      width: 90%;
+    }
+
+  }
+
+  .movieInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+
+  .movieCardContainer {
+    display: flex;
+    justify-content: center;
+  }
+}
