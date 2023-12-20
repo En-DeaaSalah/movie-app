@@ -2,7 +2,7 @@ import IProps from './props.interface'
 import style from './style.module.scss'
 import {Avatar, Card, Image, Space, Typography} from "antd";
 import Meta from "antd/es/card/Meta";
-import {FULL_BACK_IMAGE_URL, IMAGE_BASE_URL} from "../../constants";
+import {FULL_BACK_IMAGE_URL, FULL_BACK_USER_AVATAR, IMAGE_BASE_URL} from "../../constants";
 
 export default function Component({movie, onCardClick}: IProps) {
     const {Paragraph, Text} = Typography;
@@ -29,7 +29,7 @@ export default function Component({movie, onCardClick}: IProps) {
             hoverable
         >
             <Meta
-                avatar={<Avatar src={`${IMAGE_BASE_URL}/${poster_path}`}/>}
+                avatar={<Avatar src={poster_path ? `${IMAGE_BASE_URL}/${poster_path}` : FULL_BACK_USER_AVATAR}/>}
                 title={
                     <div>
                         <Space
