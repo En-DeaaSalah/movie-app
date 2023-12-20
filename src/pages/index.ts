@@ -1,1 +1,2 @@
-export default this
+export * from './home'
+export * from './movieDetails'

@@ -1,0 +1,14 @@
+.paginationContainer {
+  width: 100%;
+  text-align: right;
+}
+
+.contentContainer {
+  height: fit-content;
+
+  .cardContainer {
+
+    display: flex;
+    justify-content: center;
+  }
+}
