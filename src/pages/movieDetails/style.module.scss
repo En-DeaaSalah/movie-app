@@ -4,6 +4,11 @@
   .imageContainer{
     text-align: center;
   }
+  .content{
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+  }
   //background-color: red;
 
   .movieInfo {
@@ -18,5 +23,9 @@
 
   .value {
 
+  }
+  .movieCardContainer{
+    display: flex;
+    justify-content: center;
   }
 }
