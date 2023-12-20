@@ -2,6 +2,7 @@ import IProps from './props.interface'
 import style from './style.module.scss'
 import {Card, Space, Typography} from "antd";
 import Meta from "antd/es/card/Meta";
+import {HeartOutlined} from "@ant-design/icons";
 
 export default function Component({movie, onCardClick}: IProps) {
     const {Paragraph, Text} = Typography;

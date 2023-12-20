@@ -2,6 +2,7 @@ import IProps from './props.interface'
 import {Input} from "antd";
 import style from './style.module.scss'
 import {SearchOutlined} from "@ant-design/icons";
+import {debounce} from 'lodash';
 
 export default function ({onSearch}: IProps) {
     return (
@@ -11,7 +12,9 @@ export default function ({onSearch}: IProps) {
                 placeholder={"Search from movie"}
                 name={"value"}
                 onChange={(event) => {
-                    onSearch(event.target.value)
+                    debounce(() => {
+                        onSearch(event.target.value)
+                    }, 500)()
                 }}
                 className={style.input}/>
         </div>

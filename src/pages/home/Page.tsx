@@ -26,7 +26,7 @@ export default function Home() {
             })
         },
         queryFn: () => getAllMoviesApi({
-            ...paginationData,
+            page: paginationData.page,
             ...(searchKeyWord ? {query: searchKeyWord} : {})
         }),
         queryKey: [{
@@ -40,7 +40,6 @@ export default function Home() {
             <Spin spinning={isLoading} size={"large"}>
                 <Row style={{
                     height: "100vh",
-
                 }}>
                     <Space
                         style={{
@@ -71,7 +70,7 @@ export default function Home() {
                                 showSizeChanger={false}
                                 defaultCurrent={1}
                                 current={paginationData.page}
-                                total={paginationData.total_results}
+                                total={paginationData.total_pages}
                             />
                         </Col>
                         }
@@ -79,7 +78,7 @@ export default function Home() {
                             span={24}
                         >
                             <Row className={style.contentContainer} gutter={[20, 20]}>
-                                {data ? data.results.map((movie, index) => {
+                                {data && data.results.length > 0 ? data.results.map((movie, index) => {
                                     return (
                                         <Col
                                             xxl={6}
