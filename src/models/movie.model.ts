@@ -8,4 +8,11 @@ export interface MovieModel {
     title: string
     vote_average: number
     vote_count: number
+    adult: false,
+    backdrop_path: string,
+    genre_ids: number[],
+    poster_path: string
+    video: false,
+
+
 }

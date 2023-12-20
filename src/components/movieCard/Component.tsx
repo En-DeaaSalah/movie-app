@@ -1,12 +1,12 @@
 import IProps from './props.interface'
 import style from './style.module.scss'
-import {Card, Space, Typography} from "antd";
+import {Avatar, Card, Image, Space, Typography} from "antd";
 import Meta from "antd/es/card/Meta";
-import {HeartOutlined} from "@ant-design/icons";
+import {FULL_BACK_IMAGE_URL, IMAGE_BASE_URL} from "../../constants";
 
 export default function Component({movie, onCardClick}: IProps) {
     const {Paragraph, Text} = Typography;
-    const {title, id, overview, release_date} = movie
+    const {title, id, overview, release_date, backdrop_path, poster_path} = movie
     return (
 
         <Card
@@ -18,22 +18,35 @@ export default function Component({movie, onCardClick}: IProps) {
                 width: 240,
             }}
             cover={
-                <img alt="example" height={250}
-                     src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"/>
+                <Image
+                    draggable={false}
+                    preview={false}
+                    fallback={FULL_BACK_IMAGE_URL}
+                    alt="example"
+                    height={250}
+                    src={`${IMAGE_BASE_URL}/${backdrop_path}`}/>
             }
             hoverable
         >
-            <Meta title={
-                <div>
-                    <Space direction={"vertical"}>
-                        <Text>{title}</Text>
-                        <Text>{release_date}</Text>
-                    </Space>
-                </div>
-            } description={<Paragraph
-                ellipsis={{
-                    rows: 2
-                }}>{overview}</Paragraph>}/>
+            <Meta
+                avatar={<Avatar src={`${IMAGE_BASE_URL}/${poster_path}`}/>}
+                title={
+                    <div>
+                        <Space
+                            style={{
+                                width: "100%"
+                            }} direction={"vertical"}>
+                            <Text>{title}</Text>
+                            <Text>{release_date}</Text>
+                        </Space>
+                    </div>
+                }
+                description={
+                    <Paragraph
+                        ellipsis={{
+                            rows: 2
+                        }}>{overview}
+                    </Paragraph>}/>
         </Card>
     )
 }

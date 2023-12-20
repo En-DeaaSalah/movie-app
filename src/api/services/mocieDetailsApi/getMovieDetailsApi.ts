@@ -1,6 +1,6 @@
-import {IResponse} from "../../interfaces";
 import axios from "axios";
 import {API_KEY, SERVER_BASE_URL} from "../../../constants";
+import MovieDetailsModel from "../../../models/movieDetails.model";
 
 export default async function getMovieDetailsApi(id: number) {
     const url = `${SERVER_BASE_URL}/movie/${id}`;
@@ -12,7 +12,7 @@ export default async function getMovieDetailsApi(id: number) {
             Authorization: `Bearer ${API_KEY}`
         }
     }
-    const response = await axios.get<IResponse<any>>(url, {
+    const response = await axios.get<MovieDetailsModel>(url, {
         ...options,
     })
     return response.data
