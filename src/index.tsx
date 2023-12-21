@@ -5,12 +5,18 @@ import reportWebVitals from './reportWebVitals';
 import {RouterProvider} from "react-router";
 import {router} from "./routes";
 import {QueryClient, QueryClientProvider} from "react-query";
+import {ConfigProvider} from "antd";
 
 const queryClient = new QueryClient()
 ReactDOM.createRoot(document.getElementById("root") as any).render(
     <React.StrictMode>
         <QueryClientProvider client={queryClient}>
-            <RouterProvider router={router}/>
+            <ConfigProvider
+                typography={{
+                    className: "textFont"
+                }}>
+                <RouterProvider router={router}/>
+            </ConfigProvider>
         </QueryClientProvider>
     </React.StrictMode>
 );

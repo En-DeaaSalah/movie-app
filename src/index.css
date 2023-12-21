@@ -1,3 +1,11 @@
+*{
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+}
+
 body {
     overflow-x: hidden;
+    padding: 0px;
+}
+.textFont{
+    font-family: sans-serif;
 }

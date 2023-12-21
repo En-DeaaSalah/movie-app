@@ -1,5 +1,7 @@
 .pageContainer {
-  padding: 10px;
+
+  height: 100vh;
+  overscroll-behavior-y: auto;
 
   .cardContainer {
     display: flex;
@@ -7,5 +9,7 @@
   }
 
   .pageHeader {
+    display: flex;
+    gap: 20px;
   }
 }

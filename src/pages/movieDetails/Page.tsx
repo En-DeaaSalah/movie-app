@@ -1,7 +1,7 @@
 import {useNavigate, useParams} from "react-router";
 import {useQuery, useQueryClient} from "react-query";
 import getMovieDetailsApi from "../../api/services/movieDetailsApi/getMovieDetailsApi";
-import {Col, Image, Row, Spin} from "antd";
+import {Avatar, Col, Image, Row, Spin, Tooltip} from "antd";
 import style from './style.module.scss'
 import {FULL_BACK_IMAGE_URL, IMAGE_BASE_URL} from "../../constants";
 import getSimilarMovieApi from "../../api/services/similarMovieApi/getSimilarMovieApi";
@@ -58,13 +58,13 @@ export default function MovieDetailsPage() {
     return (
         <div className={style.pageContainer}>
             <Spin spinning={isLoading}>
-                <div style={{
-                    marginLeft: 20
-                }}>
+                <div className={style.pageHeader}>
+
                     <ArrowLeftOutlined
                         onClick={() => {
                             navigator('/')
                         }}/>
+                    <h2>{data?.title}</h2>
                 </div>
                 <div className={style.content}>
                     <Row>
@@ -75,16 +75,28 @@ export default function MovieDetailsPage() {
                              sm={24}
                              xs={24}>
                             <div className={style.imageContainer}>
-                                <Image preview={false}
-                                       fallback={FULL_BACK_IMAGE_URL}
-                                       className={style.img}
-                                       src={`${IMAGE_BASE_URL}/${data?.backdrop_path}`}/>
+                                <div className={style.imageWrapper}>
+                                    <Image preview={false}
+                                           fallback={FULL_BACK_IMAGE_URL}
+                                           className={style.img }
+                                           src={`${IMAGE_BASE_URL}/${data?.backdrop_path}`}/>
+                                </div>
                                 <div
                                     style={{
                                         marginTop: 5
                                     }}>
                                     <span>original title : </span>
                                     {data?.original_title}
+                                </div>
+                                <div className={style.producerCompanies}>
+
+                                    {
+                                        data?.production_companies.map(({id, name, logo_path}) => (
+                                            <div key={id}>
+                                                <Tooltip title={name}><Avatar size={"large"} src={`${IMAGE_BASE_URL}/${logo_path}`}/></Tooltip>
+                                            </div>
+                                        ))
+                                    }
                                 </div>
                             </div>
                         </Col>
@@ -105,9 +117,11 @@ export default function MovieDetailsPage() {
                                              value={data?.release_date}/>
                                 <DetailsItem label={"Status"}
                                              value={data?.status}/>
-                                <DetailsItem label={"Producer"}
-                                             value={data?.production_companies.map(({id, name}) => <span
-                                                 key={id}>{name}</span>)}/>
+                                <DetailsItem label={"Run Time"}
+                                             value={data?.runtime}/>
+                                {/*<DetailsItem label={"Producer"}*/}
+                                {/*             value={data?.production_companies.map(({id, name}) => <span*/}
+                                {/*                 key={id}>{name}</span>)}/>*/}
                             </div>
                         </Col>
                     </Row>

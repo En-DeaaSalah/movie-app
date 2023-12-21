@@ -18,6 +18,7 @@ export default function FavoritesPage() {
         <div className={style.pageContainer}>
             <div className={style.pageHeader}>
                 <ArrowLeftOutlined onClick={() => navigator("/")}/>
+                <h2>Your Favorites Movies</h2>
             </div>
             <div>
                 {

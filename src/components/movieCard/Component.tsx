@@ -45,24 +45,31 @@ export default function Component({
                 <HeartOutlined onClick={(event) => _handleOnFavorite(event)}/>]}
         >
             <Meta
-                avatar={<Avatar src={poster_path ? `${IMAGE_BASE_URL}/${poster_path}` : FULL_BACK_USER_AVATAR}/>}
+                avatar={<Avatar className={style.avatar}
+                                src={poster_path ? `${IMAGE_BASE_URL}/${poster_path}` : FULL_BACK_USER_AVATAR}/>}
                 title={
-                    <div>
+                    <div className={style.content}>
                         <Space
                             style={{
                                 width: "100%"
-                            }} direction={"vertical"}>
+                            }}
+                            direction={"vertical"}>
                             <Text>{title}</Text>
                             <Text>{release_date}</Text>
                         </Space>
                     </div>
                 }
                 description={
-                    <Paragraph
-                        ellipsis={{
-                            rows: 2
-                        }}>{overview}
-                    </Paragraph>}/>
+                    <div className={style.description}>
+                        <Paragraph
+                            ellipsis={{
+                                rows: 2
+                            }}>{overview}
+                        </Paragraph>
+                    </div>
+                }
+
+            />
         </Card>
     )
 }
