@@ -1,4 +1,4 @@
-import {Col, Pagination, Row, Space, Spin} from "antd";
+import {Col, message, notification, Pagination, Row, Space, Spin} from "antd";
 import {SearchField} from "../../components/searchBar";
 import {useState} from "react";
 import {MovieCard} from "../../components/movieCard";
@@ -8,18 +8,26 @@ import {useQuery} from "react-query";
 import {IPaginationConfig} from "../../api";
 import getAllMoviesApi from "../../api/services/moivesIndexApi/getAllMoviesApi";
 import style from './style.module.scss'
+import {SmileOutlined} from "@ant-design/icons";
+import getFavorites from "../../helpers/getFavorites";
+import IsFavorite from "../../helpers/isFavorite";
+import setFavorites from "../../helpers/setFavorites";
+import useNotification from "../../hook/useNotification";
+
 
 export default function Home() {
 
     const [searchKeyWord, setSearchKeyWord] = useState<string>("")
+    const navigator = useNavigate()
     const [paginationData, setPaginationData] = useState<IPaginationConfig>({
         page: 1
     })
-    const {data, isLoading, isSuccess} = useQuery({
+
+    const {
+        data,
+        isLoading,
+    } = useQuery({
         enabled: Boolean(searchKeyWord),
-        onError: (err) => {
-            console.log(err)
-        },
         onSuccess: ({results, ...paginationData}) => {
             setPaginationData({
                 ...paginationData,
@@ -30,14 +38,23 @@ export default function Home() {
             ...(searchKeyWord ? {query: searchKeyWord} : {})
         }),
         queryKey: [{
-            ...paginationData,
+            page: paginationData.page,
             ...(searchKeyWord ? {query: searchKeyWord} : {})
         }],
     })
-    const navigator = useNavigate()
+    const [messageApi, contextHolder] = message.useMessage();
+    const handleClick = () => {
+        messageApi.success({
+            type: 'success',
+            content: 'Added To Favorites',
+        });
+    };
+    const favoritesMovie = getFavorites()
+
     return (
         <>
-            <Spin spinning={isLoading} size={"large"}>
+            {contextHolder}
+            <Spin spinning={isLoading} size={"default"}>
                 <Row style={{
                     height: "100vh",
                 }}>
@@ -47,56 +64,76 @@ export default function Home() {
                         }}
                         size={"large"} direction={"vertical"}>
                         <Col span={24}>
-                            <div>
-                                <SearchField
-                                    onSearch={(keyWord) => {
-                                        setSearchKeyWord(keyWord)
-                                    }}
-                                />
-                            </div>
+                            <Row>
+                                <Col span={22}>
+                                    <div>
+                                        <SearchField
+                                            onSearch={(keyWord) => {
+                                                setSearchKeyWord(keyWord)
+                                            }}
+                                        />
+                                    </div>
+                                </Col>
+                                <Col
+                                    span={2}
+                                    className={style.myFavorites}
+                                >
+                                    <SmileOutlined onClick={() => navigator("my-favorites-movies")}/>
+                                </Col>
+                            </Row>
+
                         </Col>
                         {data &&
-                        <Col span={24}
-                             className={style.paginationContainer}>
-                            <Pagination
-                                responsive
-                                hideOnSinglePage
-                                onChange={(page, pageSize) => {
-                                    setPaginationData({
-                                        ...paginationData,
-                                        page: page
-                                    })
-                                }}
-                                showSizeChanger={false}
-                                defaultCurrent={1}
-                                current={paginationData.page}
-                                total={paginationData.total_pages}
-                            />
-                        </Col>
+                            <Col span={24}
+                                 className={style.paginationContainer}>
+                                <Pagination
+                                    responsive
+                                    hideOnSinglePage
+                                    onChange={(page) => {
+                                        setPaginationData({
+                                            ...paginationData,
+                                            page: page
+                                        })
+                                    }}
+                                    showSizeChanger={false}
+                                    defaultCurrent={1}
+                                    current={paginationData.page}
+                                    total={paginationData.total_pages}
+                                />
+                            </Col>
                         }
                         <Col
                             span={24}
                         >
                             <Row className={style.contentContainer} gutter={[20, 20]}>
-                                {data && data.results.length > 0 ? data.results.map((movie, index) => {
-                                    return (
-                                        <Col
-                                            xxl={6}
-                                            xl={6}
-                                            lg={8}
-                                            md={12}
-                                            sm={12}
-                                            xs={24}
-                                            className={style.cardContainer}>
-                                            <MovieCard
+                                {
+                                    data && data.results.length > 0 ? data.results.map((movie, index) => {
+                                        return (
+                                            <Col
+                                                xxl={6}
+                                                xl={6}
+                                                lg={8}
+                                                md={12}
+                                                sm={12}
+                                                xs={24}
                                                 key={index}
-                                                onCardClick={(id) => {
-                                                    navigator(`/movies/${id}`)
-                                                }}
-                                                movie={movie}/>
-                                        </Col>
-                                    )
-                                }) : !isLoading && <NoDataPlaceholder/>}
+                                                className={style.cardContainer}>
+                                                <MovieCard
+                                                    handleOnFavorite={(movie) => {
+                                                        if (setFavorites(movie)) {
+                                                            handleClick()
+                                                        }
+
+                                                    }}
+                                                    isFavorite={IsFavorite(movie.id, favoritesMovie)}
+                                                    key={movie.id}
+                                                    onCardClick={(id) => {
+                                                        navigator(`/movies/${id}`)
+                                                    }}
+                                                    movie={movie}/>
+                                            </Col>
+                                        )
+                                    }) : !isLoading && <NoDataPlaceholder/>}
                             </Row>
                         </Col>
                     </Space>

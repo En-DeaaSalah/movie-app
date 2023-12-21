@@ -3,10 +3,23 @@ import style from './style.module.scss'
 import {Avatar, Card, Image, Space, Typography} from "antd";
 import Meta from "antd/es/card/Meta";
 import {FULL_BACK_IMAGE_URL, FULL_BACK_USER_AVATAR, IMAGE_BASE_URL} from "../../constants";
+import {HeartFilled, HeartOutlined} from "@ant-design/icons";
 
-export default function Component({movie, onCardClick}: IProps) {
+export default function Component({
+                                      movie,
+                                      onCardClick,
+                                      isFavorite,
+                                      handleOnFavorite
+                                  }: IProps) {
     const {Paragraph, Text} = Typography;
     const {title, id, overview, release_date, backdrop_path, poster_path} = movie
+
+    function _handleOnFavorite(event: React.MouseEvent<HTMLSpanElement>) {
+        event.stopPropagation()
+        handleOnFavorite(movie)
+    }
+
+
     return (
 
         <Card
@@ -27,6 +40,7 @@ export default function Component({movie, onCardClick}: IProps) {
                     src={`${IMAGE_BASE_URL}/${backdrop_path}`}/>
             }
             hoverable
+            actions={[isFavorite ? <HeartFilled/> : <HeartOutlined onClick={(event) => _handleOnFavorite(event)}/>]}
         >
             <Meta
                 avatar={<Avatar src={poster_path ? `${IMAGE_BASE_URL}/${poster_path}` : FULL_BACK_USER_AVATAR}/>}
