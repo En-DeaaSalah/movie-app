@@ -1,4 +1,4 @@
-import {Col, Pagination, Row, Space, Spin} from "antd";
+import {Col, message, notification, Pagination, Row, Space, Spin} from "antd";
 import {SearchField} from "../../components/searchBar";
 import {useState} from "react";
 import {MovieCard} from "../../components/movieCard";
@@ -12,8 +12,9 @@ import {SmileOutlined} from "@ant-design/icons";
 import getFavorites from "../../helpers/getFavorites";
 import IsFavorite from "../../helpers/isFavorite";
 import setFavorites from "../../helpers/setFavorites";
+import useNotification from "../../hook/useNotification";
 
-const favoritesMovie = getFavorites()
+
 export default function Home() {
 
     const [searchKeyWord, setSearchKeyWord] = useState<string>("")
@@ -21,6 +22,7 @@ export default function Home() {
     const [paginationData, setPaginationData] = useState<IPaginationConfig>({
         page: 1
     })
+
     const {
         data,
         isLoading,
@@ -40,11 +42,18 @@ export default function Home() {
             ...(searchKeyWord ? {query: searchKeyWord} : {})
         }],
     })
-
+    const [messageApi, contextHolder] = message.useMessage();
+    const handleClick = () => {
+        messageApi.success({
+            type: 'success',
+            content: 'Added To Favorites',
+        });
+    };
+    const favoritesMovie = getFavorites()
 
     return (
         <>
-
+            {contextHolder}
             <Spin spinning={isLoading} size={"default"}>
                 <Row style={{
                     height: "100vh",
@@ -75,23 +84,23 @@ export default function Home() {
 
                         </Col>
                         {data &&
-                        <Col span={24}
-                             className={style.paginationContainer}>
-                            <Pagination
-                                responsive
-                                hideOnSinglePage
-                                onChange={(page) => {
-                                    setPaginationData({
-                                        ...paginationData,
-                                        page: page
-                                    })
-                                }}
-                                showSizeChanger={false}
-                                defaultCurrent={1}
-                                current={paginationData.page}
-                                total={paginationData.total_pages}
-                            />
-                        </Col>
+                            <Col span={24}
+                                 className={style.paginationContainer}>
+                                <Pagination
+                                    responsive
+                                    hideOnSinglePage
+                                    onChange={(page) => {
+                                        setPaginationData({
+                                            ...paginationData,
+                                            page: page
+                                        })
+                                    }}
+                                    showSizeChanger={false}
+                                    defaultCurrent={1}
+                                    current={paginationData.page}
+                                    total={paginationData.total_pages}
+                                />
+                            </Col>
                         }
                         <Col
                             span={24}
@@ -111,7 +120,10 @@ export default function Home() {
                                                 className={style.cardContainer}>
                                                 <MovieCard
                                                     handleOnFavorite={(movie) => {
-                                                        setFavorites(movie)
+                                                        if (setFavorites(movie)) {
+                                                            handleClick()
+                                                        }
+
                                                     }}
                                                     isFavorite={IsFavorite(movie.id, favoritesMovie)}
                                                     key={movie.id}

@@ -1,12 +1,15 @@
 import {useNavigate, useParams} from "react-router";
 import {useQuery} from "react-query";
 import getMovieDetailsApi from "../../api/services/movieDetailsApi/getMovieDetailsApi";
-import {Col, Image, Row, Spin} from "antd";
+import {Col, Image, message, Row, Spin} from "antd";
 import style from './style.module.scss'
 import {FULL_BACK_IMAGE_URL, IMAGE_BASE_URL} from "../../constants";
 import getSimilarMovieApi from "../../api/services/similarMovieApi/getSimilarMovieApi";
 import {MovieCard} from "../../components/movieCard";
 import {ArrowLeftOutlined} from "@ant-design/icons";
+import setFavorites from "../../helpers/setFavorites";
+import IsFavorite from "../../helpers/isFavorite";
+import getFavorites from "../../helpers/getFavorites";
 
 
 function DetailsItem(
@@ -48,9 +51,17 @@ export default function MovieDetails() {
         queryFn: () => getSimilarMovieApi(Number(id)),
         queryKey: ["similar", Number(id)],
     })
-
+    const [messageApi, contextHolder] = message.useMessage();
+    const favoritesMovie = getFavorites()
+    const handleClick = () => {
+        messageApi.success({
+            type: 'success',
+            content: 'Added To Favorites',
+        });
+    };
     return (
         <div className={style.pageContainer}>
+            {contextHolder}
             <Spin spinning={isLoading}>
                 <div style={{
                     marginLeft: 20
@@ -106,34 +117,39 @@ export default function MovieDetails() {
                         </Col>
                     </Row>
                     {similarMovies && similarMovies.results.length > 0 &&
-                    <Row gutter={[10, 10]}>
-                        <Spin spinning={isSimilarMoviesLoading}>
-                            <Col span={22} push={1}><h2>Similar Movies</h2></Col>
-                            <Col span={24}>
-                                <Row gutter={[10, 10]}>
-                                    {similarMovies?.results.slice(0, 8).map((movie) => {
-                                        return (
-                                            <Col
-                                                xxl={6}
-                                                xl={6}
-                                                lg={8}
-                                                md={12}
-                                                sm={12}
-                                                xs={24}
-                                                className={style.movieCardContainer}>
-                                                <MovieCard
-                                                    handleOnFavorite={(movie) => {}}
-                                                    isFavorite={false}
-                                                    onCardClick={() => {
-                                                    }}
-                                                    movie={movie}/>
-                                            </Col>
-                                        )
-                                    })}
-                                </Row>
-                            </Col>
-                        </Spin>
-                    </Row>
+                        <Row gutter={[10, 10]}>
+                            <Spin spinning={isSimilarMoviesLoading}>
+                                <Col span={22} push={1}><h2>Similar Movies</h2></Col>
+                                <Col span={24}>
+                                    <Row gutter={[10, 10]}>
+                                        {similarMovies?.results.slice(0, 8).map((movie) => {
+                                            return (
+                                                <Col
+                                                    xxl={6}
+                                                    xl={6}
+                                                    lg={8}
+                                                    md={12}
+                                                    sm={12}
+                                                    xs={24}
+                                                    className={style.movieCardContainer}>
+                                                    <MovieCard
+                                                        handleOnFavorite={(movie) => {
+                                                            if (setFavorites(movie)) {
+                                                                handleClick()
+                                                            }
+
+                                                        }}
+                                                        isFavorite={IsFavorite(movie.id, favoritesMovie)}
+                                                        onCardClick={() => {
+                                                        }}
+                                                        movie={movie}/>
+                                                </Col>
+                                            )
+                                        })}
+                                    </Row>
+                                </Col>
+                            </Spin>
+                        </Row>
                     }
                 </div>
             </Spin>
