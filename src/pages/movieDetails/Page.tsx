@@ -1,9 +1,9 @@
 import {useNavigate, useParams} from "react-router";
 import {useQuery} from "react-query";
 import getMovieDetailsApi from "../../api/services/movieDetailsApi/getMovieDetailsApi";
-import {Col, Image, Row, Spin, Typography} from "antd";
+import {Col, Image, Row, Spin} from "antd";
 import style from './style.module.scss'
-import {IMAGE_BASE_URL} from "../../constants";
+import {FULL_BACK_IMAGE_URL, IMAGE_BASE_URL} from "../../constants";
 import getSimilarMovieApi from "../../api/services/similarMovieApi/getSimilarMovieApi";
 import {MovieCard} from "../../components/movieCard";
 import {ArrowLeftOutlined} from "@ant-design/icons";
@@ -26,10 +26,9 @@ function DetailsItem(
 }
 
 export default function MovieDetails() {
-    const {Text} = Typography;
     const {id} = useParams()
     const navigator = useNavigate()
-    const {data, isLoading, isSuccess} = useQuery({
+    const {data, isLoading} = useQuery({
         onError: (err) => {
             console.log(err)
         },
@@ -71,6 +70,7 @@ export default function MovieDetails() {
                              xs={24}>
                             <div className={style.imageContainer}>
                                 <Image preview={false}
+                                       fallback={FULL_BACK_IMAGE_URL}
                                        className={style.img}
                                        src={`${IMAGE_BASE_URL}/${data?.backdrop_path}`}/>
                                 <div
@@ -105,6 +105,7 @@ export default function MovieDetails() {
                             </div>
                         </Col>
                     </Row>
+                    {similarMovies && similarMovies.results.length > 0 &&
                     <Row gutter={[10, 10]}>
                         <Spin spinning={isSimilarMoviesLoading}>
                             <Col span={22} push={1}><h2>Similar Movies</h2></Col>
@@ -121,6 +122,8 @@ export default function MovieDetails() {
                                                 xs={24}
                                                 className={style.movieCardContainer}>
                                                 <MovieCard
+                                                    handleOnFavorite={(movie) => {}}
+                                                    isFavorite={false}
                                                     onCardClick={() => {
                                                     }}
                                                     movie={movie}/>
@@ -131,6 +134,7 @@ export default function MovieDetails() {
                             </Col>
                         </Spin>
                     </Row>
+                    }
                 </div>
             </Spin>
         </div>

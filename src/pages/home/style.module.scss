@@ -1,13 +1,18 @@
 .paginationContainer {
   width: 100%;
   text-align: right;
+
+}
+
+.myFavorites {
+  display: flex !important;
+  justify-content: center !important;
 }
 
 .contentContainer {
   height: fit-content;
 
   .cardContainer {
-
     display: flex;
     justify-content: center;
   }
