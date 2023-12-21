@@ -40,7 +40,9 @@ export default function Component({
                     src={`${IMAGE_BASE_URL}/${backdrop_path}`}/>
             }
             hoverable
-            actions={[isFavorite ? <HeartFilled/> : <HeartOutlined onClick={(event) => _handleOnFavorite(event)}/>]}
+            actions={[isFavorite ? <HeartFilled style={{color: "red"}}
+                                                onClick={(event) => _handleOnFavorite(event)}/> :
+                <HeartOutlined onClick={(event) => _handleOnFavorite(event)}/>]}
         >
             <Meta
                 avatar={<Avatar src={poster_path ? `${IMAGE_BASE_URL}/${poster_path}` : FULL_BACK_USER_AVATAR}/>}
