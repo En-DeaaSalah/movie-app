@@ -28,7 +28,7 @@ function DetailsItem(
     )
 }
 
-export default function MovieDetails() {
+export default function MovieDetailsPage() {
     const {id} = useParams()
     const navigator = useNavigate()
     const {data, isLoading} = useQuery({

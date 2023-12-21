@@ -1,21 +1,25 @@
 import * as React from "react";
+import {Suspense} from "react";
 import {createBrowserRouter,} from "react-router-dom";
-import {HomePage} from "../pages/home";
-import MovieDetails from "../pages/movieDetails/Page";
-import {FavoritesPage} from "../pages/favorites";
+import {Spin} from "antd";
+
+const HomePage = React.lazy(() => import( "../pages/home/Page"))
+const MovieDetailsPage = React.lazy(() => import( "../pages/movieDetails/Page"))
+const FavoritePage = React.lazy(() => import( "../pages/favorites/Page"))
+
 
 export const router = createBrowserRouter([
     {
         path: "/",
-        element: <HomePage/>,
+        element: <Suspense fallback={<Spin fullscreen={true} spinning={true}/>}><HomePage/></Suspense>,
     },
     {
         path: "movies/:id",
-        element: <MovieDetails/>,
+        element: <Suspense fallback={<Spin fullscreen={true} spinning={true}/>}><MovieDetailsPage/></Suspense>,
     },
     {
         path: "my-favorites-movies",
-        element: <FavoritesPage/>,
+        element: <Suspense fallback={<Spin fullscreen={true} spinning={true}/>}><FavoritePage/></Suspense>,
     },
 
 ]);

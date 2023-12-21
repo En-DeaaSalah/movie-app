@@ -15,7 +15,7 @@ import setFavorites from "../../helpers/setFavorites";
 import useNotification from "../../hook/useNotification";
 
 
-export default function Home() {
+export default function HomePage() {
 
     const [searchKeyWord, setSearchKeyWord] = useState<string>("")
     const navigator = useNavigate()

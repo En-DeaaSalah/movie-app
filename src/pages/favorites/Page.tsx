@@ -7,7 +7,7 @@ import {MovieCard} from "../../components/movieCard";
 import {NoDataPlaceholder} from "../../components/noData";
 import setFavorites from "../../helpers/setFavorites";
 
-export default function Favorites() {
+export default function FavoritesPage() {
     const navigator = useNavigate()
     const myFavoritesMovies = getFavorites()
 
