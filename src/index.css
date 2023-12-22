@@ -5,6 +5,9 @@
 body {
     overflow-x: hidden;
     padding: 0px;
+    margin: 0px;
+    background-color: black;
+    padding-bottom: 30px;
 }
 .textFont{
     font-family: sans-serif;

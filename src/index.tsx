@@ -12,6 +12,20 @@ ReactDOM.createRoot(document.getElementById("root") as any).render(
     <React.StrictMode>
         <QueryClientProvider client={queryClient}>
             <ConfigProvider
+                theme={{
+                    components: {
+                        Pagination: {
+                            colorText: "white",
+                            borderRadius: 50,
+                            colorPrimaryActive: "white"
+                        },
+                        Input: {
+                            colorPrimary: "white",
+                            colorText: "white",
+                            colorTextBase: "white"
+                        }
+                    }
+                }}
                 typography={{
                     className: "textFont"
                 }}>

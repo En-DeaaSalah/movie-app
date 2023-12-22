@@ -1,4 +1,32 @@
+
+.pageHeader {
+  position: relative;
+  .searchBar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 5%;
+    width: 100%;
+
+    .title {
+      text-align: center;
+      color: white;
+      font-size: 24px;
+    }
+  }
+
+  .heroSectionImage {
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    height: 75vh;
+    width: 100%;
+  }
+
+}
+
 .paginationContainer {
+  margin: 5px;
   width: 100%;
   text-align: right;
 
@@ -7,6 +35,13 @@
 .myFavorites {
   display: flex !important;
   justify-content: center !important;
+
+  div {
+    color: white;
+    text-decoration: underline;
+    cursor: pointer;
+    font-family: Arial, serif;
+  }
 }
 
 .contentContainer {
